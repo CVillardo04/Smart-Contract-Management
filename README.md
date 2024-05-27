@@ -1,28 +1,41 @@
-# Smart Contract Management
+# Smart Contract Management - ETH-AVAX - Metacrafters
 
 
+## Overview
+The Metacrafters ATM project demonstrates smart contract management using React and Ethereum. Users may deposit and withdraw ETH using this application by interacting with a deployed smart contract.
 
-# Description
-After cloning the github, you will want to do the following to get the code running on your computer.
+## Getting Started
+To run the application, follow these steps:
+
+1. Clone the repository to your local machine.
+2. Ensure you have Node.js installed.
+3. Install dependencies by running `npm install`.
+4. Start the development server with `npm start`.
+5. Access the application through your web browser at `http://localhost:3000`.
+
+## Usage
+When users open the program, they are requested to join their MetaMask wallet. After connecting, users may access their account details and balance. They can deposit or withdraw ETH using the buttons provided.
 
 
+## Technologies Used
+- React: Frontend framework for creating a user interface.
+- ethers.js: A JavaScript library for dealing with the Ethereum blockchain.
+- MetaMask: Ethereum wallet extension allows for browser-based interaction with Ethereum.
 
-# Getting Started
-1. Inside the project directory, in the terminal type: npm i
-2. Open two additional terminals in your VS code
-3. In the second terminal type: npx hardhat node
-4. In the third terminal, type: npx hardhat run --network localhost scripts/deploy.js
-5. Back in the first terminal, type npm run dev to launch the front-end.
 
-After this, the project will be running on your localhost. 
-Typically at http://localhost:3000/
+## File Structure
+- `HomePage.js`: Main component file containing the logic and UI for the application.
+- `artifacts/contracts/Assessment.sol/Assessment.json`: ABI file generated from the deployed smart contract.
+- `package.json`: Configuration file for npm dependencies and scripts.
+- `README.md`: Documentation file providing information about the project.
 
+## Contributing
+Contributions are welcomed! If you want to contribute to the project, please fork the repository and create a pull request with your improvements.
 
 
 ## Author 
 Chester Villardo
 8215358@ntc.edu.ph
-
 
 
 ## License  
