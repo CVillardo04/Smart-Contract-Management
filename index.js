@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
+import atm_abi from "../artifacts/contracts/Chester.sol/Chester.json";
 
 export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
@@ -148,7 +148,6 @@ export default function HomePage() {
         .container {
           text-align: center;
           margin-top: 150px;
-          color: blue;
           background-color: #ADD8E6;
           padding: 20px;
           border-radius: 10px;
