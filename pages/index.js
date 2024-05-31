@@ -86,7 +86,7 @@ export default function HomePage() {
   const deposit = async () => {
     if (atm) {
       try {
-        let tx = await atm.deposit({ value: ethers.utils.parseEther(depositAmount) });
+        let tx = await atm.deposit(ethers.utils.parseEther(depositAmount));
         await tx.wait();
         getBalance();
         updateTransactionHistory("Deposit", depositAmount);
@@ -119,11 +119,12 @@ export default function HomePage() {
   const renderTransactionHistory = () => {
     return (
       <div>
-        <h3>Transaction History</h3>
+        <h3>Transaction History of </h3>
+        <h4>{account}</h4>
         <ul>
           {transactionHistory.map((transaction, index) => (
             <li key={index}>
-              {transaction.action} {Math.abs(transaction.amount)} ETH -{" "}
+              {transaction.action} {Math.abs(transaction.amount)} ETH in your account-{" "}
               {new Date(transaction.timestamp).toLocaleString()}
             </li>
           ))}
@@ -151,7 +152,7 @@ export default function HomePage() {
 
     return (
       <div>
-        <h3>Your Balance: {balance} ETH</h3>
+        <h3>Owner: Chester Villardo</h3>
         <div>
           <input
             type="number"
@@ -188,7 +189,7 @@ export default function HomePage() {
   return (
     <main className="container">
       <header>
-        <h1>Welcome to Metamask ATM!</h1>
+        <h1>Welcome Chester to Metamask ATM!</h1>
       </header>
       {initUser()}
       <style jsx>{`
@@ -227,4 +228,5 @@ export default function HomePage() {
     </main>
   );
 }
+
 
