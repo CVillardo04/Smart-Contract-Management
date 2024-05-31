@@ -18,16 +18,11 @@ export default function ChesterHomePage() {
     if (window.ethereum) {
       try {
         setEthWallet(window.ethereum);
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        handleAccount(accounts);
       } catch (error) {
-        console.error("Failed to connect to MetaMask:", error);
+        console.error("Error setting MetaMask wallet:", error);
       }
-    } else {
-      console.log("MetaMask is not installed");
     }
-  };
-  
+  };  
 
   const handleAccount = (accounts) => {
     if (accounts && accounts.length > 0) {
