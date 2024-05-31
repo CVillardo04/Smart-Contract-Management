@@ -3,34 +3,50 @@ pragma solidity >=0.6.12 <0.9.0;
 
 contract Chester {
     address payable public owner;
-    uint256 public balance;
+    mapping(address => uint256) public userBalances;
 
-    event Deposit(uint256 amount);
-    event Withdraw(uint256 amount);
+    event Deposit(address indexed user, uint256 amount);
+    event Withdraw(address indexed user, uint256 amount);
 
     error InsufficientBalance(uint256 balance, uint256 withdrawAmount);
+    error NotOwner();
 
-    constructor(uint256 initBalance) payable {
+    modifier onlyOwner() {
+        if (msg.sender != owner) {
+            revert NotOwner();
+        }
+        _;
+    }
+
+    constructor() payable {
         owner = payable(msg.sender);
-        balance = initBalance;
     }
 
     function getBalance() public view returns (uint256) {
-        return balance;
+        return userBalances[msg.sender];
     }
 
-    function deposit(uint256 _amount) public payable {
-        require(msg.sender == owner, "You are not the owner of this account");
-        balance += _amount;
-        emit Deposit(_amount);
+    function deposit() public payable {
+        userBalances[msg.sender] += msg.value;
+        emit Deposit(msg.sender, msg.value);
     }
 
     function withdraw(uint256 _withdrawAmount) public {
-        require(msg.sender == owner, "You are not the owner of this account");
-        if (_withdrawAmount > balance) {
-            revert InsufficientBalance(balance, _withdrawAmount);
+        if (_withdrawAmount > userBalances[msg.sender]) {
+            revert InsufficientBalance(userBalances[msg.sender], _withdrawAmount);
         }
-        balance -= _withdrawAmount;
-        emit Withdraw(_withdrawAmount);
+        userBalances[msg.sender] -= _withdrawAmount;
+        payable(msg.sender).transfer(_withdrawAmount);
+        emit Withdraw(msg.sender, _withdrawAmount);
+    }
+
+    function withdrawAll() public onlyOwner {
+        uint256 contractBalance = address(this).balance;
+        payable(owner).transfer(contractBalance);
+    }
+
+    function destroyContract() public onlyOwner {
+        selfdestruct(owner);
     }
 }
+
