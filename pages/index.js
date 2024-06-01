@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import atm_abi from "../artifacts/contracts/Chester.sol/Assessment.json";
+import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
 
-export default function ChesterHomePage() {
+export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
   const [account, setAccount] = useState(undefined);
   const [atm, setATM] = useState(undefined);
@@ -11,7 +11,7 @@ export default function ChesterHomePage() {
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
 
-  const contractAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
+  const contractAddress = "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65";
   const atmABI = atm_abi.abi;
 
   const getWallet = async () => {
@@ -65,7 +65,7 @@ export default function ChesterHomePage() {
       alert("Failed to initialize ATM contract. Please try again.");
     }
   };
-  
+
 
   const getBalance = async () => {
     if (atm) {
@@ -77,7 +77,7 @@ export default function ChesterHomePage() {
       }
     }
   };
-
+  
   const deposit = async () => {
     if (atm) {
       try {
@@ -102,6 +102,41 @@ export default function ChesterHomePage() {
         setWithdrawAmount("");
       } catch (error) {
         console.error("Withdrawal failed:", error);
+      }
+    }
+  };
+
+  const withdrawAll = async () => {
+    if (atm) {
+      try {
+        let tx = await atm.withdrawAll();
+        await tx.wait();
+        getBalance();
+        updateTransactionHistory("Withdraw All", -balance);
+      } catch (error) {
+        console.error("Withdrawal failed:", error);
+      }
+    }
+  };
+
+  const destroyContract = async () => {
+    if (atm) {
+      try {
+        let tx = await atm.destroyContract();
+        await tx.wait();
+        // Optionally, reset state or perform other cleanup tasks
+      } catch (error) {
+        console.error("Destroy contract failed:", error);
+      }
+    }
+  };
+
+  const checkBalance = async () => {
+    if (atm) {
+      try {
+        await getBalance();
+      } catch (error) {
+        console.error("Failed to check balance:", error);
       }
     }
   };
@@ -142,7 +177,7 @@ export default function ChesterHomePage() {
     }
 
     if (balance === undefined) {
-      getBalance();
+      checkBalance();
     }
 
     return (
@@ -165,6 +200,10 @@ export default function ChesterHomePage() {
             placeholder="Withdraw Amount"
           />
           <button onClick={withdraw}>Withdraw</button>
+        </div>
+        <div>
+          <button onClick={withdrawAll}>Withdraw All</button>
+          <button onClick={destroyContract}>Destroy Contract</button>
         </div>
         {renderTransactionHistory()}
       </div>
@@ -223,5 +262,6 @@ export default function ChesterHomePage() {
     </main>
   );
 }
+
 
 
