@@ -172,7 +172,7 @@ export default function HomePage() {
     // Check if user is connected. If not, connect to their account
     if (!account) {
       return (
-        <button onClick={connectAccount}>Connect your MetaMask wallet</button>
+        <button onClick={connectAccount}> Please connect your MetaMask wallet</button>
       );
     }
 
@@ -183,6 +183,7 @@ export default function HomePage() {
     return (
       <div>
         <h3>Owner: Chester Villardo</h3>
+        <h4>Balance: {balance}</h4>
         <div>
           <input
             type="number"
