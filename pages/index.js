@@ -22,7 +22,7 @@ export default function HomePage() {
         console.error("Error setting MetaMask wallet:", error);
       }
     }
-  };  
+  };
 
   const handleAccount = (accounts) => {
     if (accounts && accounts.length > 0) {
@@ -38,11 +38,11 @@ export default function HomePage() {
       alert("MetaMask wallet is required to connect");
       return;
     }
-  
+
     try {
       const accounts = await ethWallet.request({ method: "eth_requestAccounts" });
       handleAccount(accounts);
-  
+
       // Once wallet is set, get a reference to the deployed contract
       getATMContract();
     } catch (error) {
@@ -50,14 +50,13 @@ export default function HomePage() {
       alert("Failed to connect to MetaMask. Please try again.");
     }
   };
-  
 
   const getATMContract = () => {
     try {
       const provider = new ethers.providers.Web3Provider(ethWallet);
       const signer = provider.getSigner();
       const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
-  
+
       setATM(atmContract);
       console.log("ATM contract initialized successfully");
     } catch (error) {
@@ -65,7 +64,6 @@ export default function HomePage() {
       alert("Failed to initialize ATM contract. Please try again.");
     }
   };
-
 
   const getBalance = async () => {
     if (atm) {
@@ -77,32 +75,48 @@ export default function HomePage() {
       }
     }
   };
-  
+
   const deposit = async () => {
-    if (atm) {
-      try {
-        let tx = await atm.deposit(ethers.utils.parseEther(depositAmount));
-        await tx.wait();
-        getBalance();
-        updateTransactionHistory("Deposit", depositAmount);
-        setDepositAmount("");
-      } catch (error) {
-        console.error("Deposit failed:", error);
-      }
+    if (!atm) {
+      alert("ATM contract is not initialized");
+      return;
+    }
+
+    if (!depositAmount || isNaN(depositAmount) || parseFloat(depositAmount) <= 0) {
+      alert("Please enter a valid deposit amount");
+      return;
+    }
+
+    try {
+      let tx = await atm.deposit({ value: ethers.utils.parseEther(depositAmount) });
+      await tx.wait();
+      getBalance();
+      updateTransactionHistory("Deposit", depositAmount);
+      setDepositAmount("");
+    } catch (error) {
+      console.error("Deposit failed:", error);
     }
   };
 
   const withdraw = async () => {
-    if (atm) {
-      try {
-        let tx = await atm.withdraw(ethers.utils.parseEther(withdrawAmount));
-        await tx.wait();
-        getBalance();
-        updateTransactionHistory("Withdraw", -withdrawAmount);
-        setWithdrawAmount("");
-      } catch (error) {
-        console.error("Withdrawal failed:", error);
-      }
+    if (!atm) {
+      alert("ATM contract is not initialized");
+      return;
+    }
+
+    if (!withdrawAmount || isNaN(withdrawAmount) || parseFloat(withdrawAmount) <= 0) {
+      alert("Please enter a valid withdraw amount");
+      return;
+    }
+
+    try {
+      let tx = await atm.withdraw(ethers.utils.parseEther(withdrawAmount));
+      await tx.wait();
+      getBalance();
+      updateTransactionHistory("Withdraw", -withdrawAmount);
+      setWithdrawAmount("");
+    } catch (error) {
+      console.error("Withdrawal failed:", error);
     }
   };
 
@@ -263,6 +277,7 @@ export default function HomePage() {
     </main>
   );
 }
+
 
 
 
